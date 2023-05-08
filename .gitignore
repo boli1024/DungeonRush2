@@ -1,0 +1,12 @@
+.vscode
+.idea
+dist
+snake
+*.zip
+storage.dat
+archive
+dungeon_rush
+*.o
+*.gch
+build
+cmake-build-debug
