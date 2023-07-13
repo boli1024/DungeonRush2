@@ -13,23 +13,34 @@
 #define BUFF_DEFFENCE 2
 #define BUFF_ATTACK 3
 #define BUFF_END 4
-// Renderer Types
+
+// Renderer Types  以下为渲染器类型
+
+// 方向
 typedef enum {
     LEFT, RIGHT, UP, DOWN
 } Direction;
+
+// 位置
 typedef enum {
     AT_TOP_LEFT, AT_BOTTOM_LEFT, AT_BOTTOM_CENTER, AT_CENTER
 } At;
+
+// 循环类型
 typedef enum {
     LOOP_ONCE, LOOP_INFI, LOOP_LIFESPAN
 } LoopType;
 
+
+// 纹理
 typedef struct {
     SDL_Texture *origin;
     int height, width, frames;
     // SDL_Rect* crops;
     SDL_Rect *crops;
 } Texture;
+
+// 文本块
 typedef struct {
     char text[TEXT_LEN];
     int height, width;
@@ -37,13 +48,22 @@ typedef struct {
     SDL_Color color;
 } Text;
 
+// 文本块链接，使 i18n 中 text key 索引至 Text
+typedef struct {
+    char *textKey;
+    Text *text;
+} TextLink;
+
 void setText(Text *self, const char *str);
 
+// 特效
 typedef struct {
     int duration, currentFrame, length;
     SDL_Color *keys;
     SDL_BlendMode mode;
 } Effect;
+
+// 动画
 typedef struct {
     LoopType lp;
     Texture *origin;
@@ -90,10 +110,15 @@ void destroyAnimation(Animation *self);
 
 void copyAnimation(Animation *src, Animation *dest);
 
-// Game Logic Types
+
+// Game Logic Types  以下为游戏逻辑类型
+
+// 点
 typedef struct {
     int x, y;
 } Point;
+
+// 游戏分数
 typedef struct {
     int damage, stand, killed, got;
     double rank;
@@ -107,9 +132,12 @@ void addScore(Score *, Score *);
 
 void destroyScore(Score *);
 
+// 地图块类型 陷阱、墙壁、楼梯、出口
 typedef enum {
     BLOCK_TRAP, BLOCK_WALL, BLOCK_FLOOR, BLOCK_EXIT
 } BlockType;
+
+// 地图块
 typedef struct {
     BlockType bp;
     int x, y;
@@ -117,6 +145,8 @@ typedef struct {
     bool enable;  // Used for trap block
     Animation *ani;
 } Block;
+
+// 道具类型
 typedef enum {
     ITEM_NONE,
     ITEM_HERO,              // Unpicked hero on the floor
@@ -124,6 +154,8 @@ typedef enum {
     ITEM_HP_EXTRA_MEDCINE,  // Yellow meds
     ITEM_WEAPON
 } ItemType;
+
+// 道具
 typedef struct {
     ItemType type;
     int id, belong;

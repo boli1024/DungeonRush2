@@ -8,6 +8,7 @@ void prngSrand(unsigned seed) {
     nSeed = seed;
 }
 
+// 伪随机数生成器 pseudo random number generator, PRNG
 unsigned int prngRand() {
     // our initial starting seed is 5323
 
