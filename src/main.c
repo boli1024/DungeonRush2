@@ -6,6 +6,7 @@
 #include "game.h"
 #include "ui.h"
 #include "prng.h"
+#include "i18n.h"
 
 #ifdef DBG
 #include <assert.h>
@@ -13,6 +14,8 @@
 
 int main(int argc, char **args) {
     prngSrand(time(NULL));
+    I18N_Init();
+    // TODO 从配置文件加载上次选择语言
     // Start up SDL and create window
     if (!init()) {
         printf("Failed to initialize!\n");

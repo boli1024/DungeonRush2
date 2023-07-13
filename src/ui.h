@@ -13,6 +13,8 @@ void baseUi(int, int);
 
 void mainUi();
 
+void chooseLanguageUi();
+
 void rankListUi(int, Score **);
 
 void localRankListUi();

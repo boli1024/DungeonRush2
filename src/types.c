@@ -41,7 +41,7 @@ bool initText(Text *self, const char *str, SDL_Color color) {
     self->color = color;
     strcpy(self->text, str);
     // Render text surface
-    SDL_Surface *textSurface = TTF_RenderText_Solid(font, str, color);
+    SDL_Surface *textSurface = TTF_RenderUTF8_Solid(font, str, color);
     if (textSurface == NULL) {
         printf("Unable to render text surface! SDL_ttf Error: %s\n",
                TTF_GetError());

@@ -11,6 +11,8 @@
 #include "types.h"
 #include "render.h"
 #include "weapon.h"
+#include "i18n.h"
+#include "util.h"
 
 
 // Constants
@@ -52,15 +54,15 @@ const char tilesetPath[TILESET_SIZE][PATH_LEN] = {
         "res/drawable/Thunder_Yellow",
         "res/drawable/attack_up",
         "res/drawable/powerful_bow"};
-const char fontPath[] = "res/font/m5x7.ttf";
-const char textsetPath[] = "res/text.txt";
 
-const int bgmNums = 4;
+const char fontDir[] = "res/font/";
+const int bgmNums = 2;
+// TODO check audio bg1 bg3
 const char bgmsPath[AUDIO_BGM_SIZE][PATH_LEN] = {
         "res/audio/main_title.ogg",
-        "res/audio/bg1.ogg",
+//        "res/audio/bg1.ogg",
         "res/audio/bg2.ogg",
-        "res/audio/bg3.ogg"
+//        "res/audio/bg3.ogg"
 };
 const char soundsPath[PATH_LEN] = "res/audio/sounds";
 const char soundsPathPrefix[PATH_LEN] = "res/audio/";
@@ -69,6 +71,8 @@ int texturesCount;
 Texture textures[TEXTURES_SIZE];
 int textsCount;
 Text texts[TEXTSET_SIZE];
+int textLinkCount;
+TextLink textLinks[TEXTSET_SIZE];
 
 extern SDL_Color BLACK;
 extern SDL_Color WHITE;
@@ -175,21 +179,47 @@ SDL_Texture *loadSDLTexture(const char *path) {
 
 bool loadTextset() {
     bool success = true;
-    FILE *file = fopen(textsetPath, "r");
-    char str[TEXT_LEN];
-    while (fgets(str, TEXT_LEN, file)) {
-        int n = strlen(str);
-        while (n - 1 >= 0 && !isprint(str[n - 1])) str[--n] = 0;
-        if (!n) continue;
-        if (!initText(&texts[textsCount++], str, WHITE)) {
+    for (int i = 0; i < LANG_ITEM_NUM; ++i) {
+        if (!initText(&texts[textsCount], LANG_ITEM_ARRAY[i].value, WHITE)) {
             success = false;
         }
+
+        TextLink link;
+        link.textKey = LANG_ITEM_ARRAY[i].key;
+        link.text = &texts[textsCount];
+        textLinks[textLinkCount] = link;
+
+        textsCount++;
+        textLinkCount++;
+
 #ifdef DBG
         printf("Texts #%d: %s loaded\n", textsCount - 1, str);
 #endif
     }
-    fclose(file);
+
     return success;
+}
+
+bool reloadTextset() {
+    for (int i = 0; i < textLinkCount; ++i) {
+        TextLink *link = &textLinks[i];
+        link->text = NULL;
+        link->textKey = NULL;
+    }
+    textsCount = 0;
+    textLinkCount = 0;
+
+    return loadTextset();
+}
+
+Text *findText(char *textKey) {
+    for (int i = 0; i < textLinkCount; ++i) {
+        TextLink *link = &textLinks[i];
+        if (strcmp(textKey, link->textKey) == 0) {
+            return link->text;
+        }
+    }
+    return NULL;
 }
 
 bool loadTileset(const char *path, SDL_Texture *origin) {
@@ -255,7 +285,9 @@ bool loadMedia() {
         success &= (bool) originTextures[i];
     }
     // Open the font
-    font = TTF_OpenFont(fontPath, FONT_SIZE);
+    char fontPath[50] = "";
+    str_concat(fontPath, fontDir, CURRENT_LANG_CONF->font, NULL);
+    font = TTF_OpenFont(fontPath, CURRENT_LANG_CONF->size);
     if (font == NULL) {
         printf("Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
         success = false;

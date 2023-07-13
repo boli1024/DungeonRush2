@@ -182,6 +182,10 @@ bool loadTileset(const char *path, SDL_Texture *origin);
 
 bool loadTextset();
 
+bool reloadTextset();
+
+Text *findText(char *textKey);
+
 void initCommonEffects();
 
 void initCommonAnimations();

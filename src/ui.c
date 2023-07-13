@@ -2,6 +2,7 @@
 
 #include <SDL.h>
 #include <SDL_mixer.h>
+#include <SDL_ttf.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,11 +17,15 @@
 #include "storage.h"
 #include "text.h"
 #include "types.h"
+#include "i18n.h"
+#include "util.h"
 
 extern LinkList animationsList[];
 extern bool hasMap[MAP_SIZE][MAP_SIZE];
 extern Text texts[TEXTSET_SIZE];
 extern SDL_Renderer *renderer;
+extern TTF_Font *font;
+extern char fontDir[];
 extern int renderFrames;
 extern SDL_Color WHITE;
 extern Texture textures[];
@@ -312,9 +317,14 @@ void mainUi() {
      AT_BOTTOM_CENTER);
      }
      */
-    int optsNum = 4;
+    int optsNum = 5;
     Text **opts = malloc(sizeof(Text *) * optsNum);
-    for (int i = 0; i < optsNum; i++) opts[i] = texts + i + 6;
+//    for (int i = 0; i < optsNum; i++) opts[i] = texts + i + 6;
+    opts[0] = findText(TK_SINGLE_PLAYER);
+    opts[1] = findText(TK_MULTI_PLAYERS);
+    opts[2] = findText(TK_RANK_LIST);
+    opts[3] = findText(TK_LANGUAGE);
+    opts[4] = findText(TK_EXIT);
     int opt = chooseOptions(optsNum, opts);
     free(opts);
 
@@ -339,12 +349,62 @@ void mainUi() {
             localRankListUi();
             break;
         case 3:
+            chooseLanguageUi();
+            break;
+        case 4:
             break;
     }
     if (opt == optsNum) return;
-    if (opt != 3) {
+    if (opt != 4) {
         mainUi();
     }
+}
+
+// TODO 保存选择语言至配置文件
+void chooseLanguageUi() {
+    baseUi(30, 12);
+    int optsNum = LANG_CONF_NUM;
+    Text **opts = malloc(sizeof(Text *) * optsNum);
+    TTF_Font *saveFont = font;
+
+    // TODO 缓存每个语言 text，不必每次加载字体渲染
+    for (int i = 0; i < LANG_CONF_NUM; ++i) {
+        font = NULL;
+        LangConf *conf = &LANG_CONF_ARRAY[i];
+        char fontPath[50] = "";
+        str_concat(fontPath, fontDir, conf->font, NULL);
+        font = TTF_OpenFont(fontPath, conf->size);
+        if (font == NULL) {
+            printf("open font fail: %s", conf->font);
+            continue;
+        }
+        opts[i] = createText(conf->show, WHITE);
+        TTF_CloseFont(font);
+    }
+    font = saveFont;
+
+    int opt = chooseOptions(optsNum, opts);
+    if (opt != optsNum) {
+        LangConf *conf = &LANG_CONF_ARRAY[opt];
+        if (strcmp(conf->show, CURRENT_LANG_CONF->show) != 0) {
+            I18N_ChangeLang(conf->show);
+            // change font
+            char fontPath[50] = "";
+            str_concat(fontPath, fontDir, conf->font, NULL);
+            font = TTF_OpenFont(fontPath, CURRENT_LANG_CONF->size);
+
+            if (!reloadTextset()) {
+                printf("Failed to load textset!\n");
+            }
+        }
+    }
+
+    for (int i = 0; i < LANG_CONF_NUM; ++i) {
+        destroyText(opts[i]);
+    }
+    free(opts);
+    blackout();
+    clearRenderer();
 }
 
 void rankListUi(int count, Score **scores) {

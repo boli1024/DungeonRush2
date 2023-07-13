@@ -1,0 +1,7 @@
+en_US.show = English
+en_US.size = 32
+en_US.font = m5x7.ttf
+
+zh_CN.show = 简体中文
+zh_CN.size = 22
+zh_CN.font = VonwaonBitmap-12px.ttf

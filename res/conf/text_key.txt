@@ -1,0 +1,17 @@
+game_name
+author
+PLACEHOLDER
+PLACEHOLDER
+player_1
+player_2
+single_player
+multi_players
+rank_list
+exit
+level_normal
+level_hard
+level_insane
+local
+lan
+host_game
+join_game
