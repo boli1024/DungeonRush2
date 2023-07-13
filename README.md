@@ -1,9 +1,15 @@
-# DungeonRush
-![](screenshot.gif)
->A game inspired by Snake, in pure C with SDL2.
->My piece of work from C assignment. Hope you like it :)
+>Forked from [rapiz1/DungeonRush](https://github.com/rapiz1/DungeonRush)
+>
+>Special thanks to the original project's authors and contributors! Please refer to the original project for more information.
 
-*I work on the small project on my own so the code lacks of comments.*
+# DungeonRush2
+
+![](screenshot.gif)
+## Language Support
+
+- English (default) 
+
+- Simplified Chinese (简体中文)
 
 ## Download
 
@@ -28,22 +34,6 @@ AppImage for Linux is also available in release page.
 *The game supports macOS but I don't have an Mac to compile for it.*
 
 The executable is called `dungeon_rush`
-
-## Release Note
-
-### v1.1-beta
-- Fix bugs
-
-### v1.0-beta
-- Fix bugs
-- Add Multiplayer / LAN mode
-
-**You can play with your friend via Internet!**
-*You need to be in the same network and can directly connect by IP*
-
-### v1.0-alpha
-
-Initial release
 
 ## How to Play
 
@@ -127,3 +117,10 @@ GPL
 |BOMB By Azureflux|CC BY-NC-SA 4.0|
 |Unknown BGM|Unknown|
 |The Essential Retro Video Game Sound Effects Collection By Juhani Junkala |CC BY 3.0|
+
+### Font
+|Name|License|
+|----|-------|
+| m5x7                        | Unknown |
+| Vonwaon Bitmap (凤凰点阵体) | CC0 1.0 |
+
