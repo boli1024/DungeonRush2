@@ -11,6 +11,8 @@
 #define MAX_PALYERS_NUM 2
 
 // Game
+#define GAME_FPS 60
+#define GAME_TICK_INTERVAL (1000/GAME_FPS)  // 渲染周期，同一周期内只能渲染一次，否则游戏速度会加快
 // Spike
 #define SPIKE_TIME_MASK 600
 #define SPIKE_OUT_INTERVAL 120

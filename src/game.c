@@ -1111,6 +1111,7 @@ int gameLoop() {
     // int posx = 0, posy = SCREEN_HEIGHT / 2;
     // Game loop
     for (bool quit = 0; !quit;) {
+        uint32_t renderBegin = SDL_GetTicks();
         quit = handleLocalKeypress();
         if (quit) sendGameOverPacket(3);
         if (lanClientSocket != NULL) handleLanKeypress();
@@ -1164,6 +1165,13 @@ int gameLoop() {
             if (isWin()) {
                 setTerm(STAGE_CLEAR);
             }
+        }
+
+        // 计算渲染时间，防止游戏速度过快
+        uint32_t renderFinish = SDL_GetTicks();
+        uint32_t renderTimeLen = renderFinish - renderBegin;
+        if (renderTimeLen < GAME_TICK_INTERVAL) {
+            SDL_Delay(GAME_TICK_INTERVAL - renderTimeLen);
         }
     }
     return status;
