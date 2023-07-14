@@ -55,6 +55,7 @@ const char tilesetPath[TILESET_SIZE][PATH_LEN] = {
         "res/drawable/attack_up",
         "res/drawable/powerful_bow"};
 
+const char iconPath[] = "res/image/dungeon_rush2.png";
 const char fontDir[] = "res/font/";
 const int bgmNums = 2;
 // TODO check audio bg1 bg3
@@ -102,7 +103,7 @@ bool init() {
         success = false;
     } else {
         // Create window
-        window = SDL_CreateWindow("Dungeon Rush "VERSION_STRING, SDL_WINDOWPOS_UNDEFINED,
+        window = SDL_CreateWindow("DungeonRush2", SDL_WINDOWPOS_UNDEFINED,
                                   SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
                                   SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
         if (window == NULL) {
@@ -131,6 +132,10 @@ bool init() {
                            IMG_GetError());
                     success = false;
                 }
+                // set game icon
+                SDL_Surface *icon = IMG_Load(iconPath);
+                SDL_SetWindowIcon(window, icon);
+
                 // Initialize SDL_ttf
                 if (TTF_Init() == -1) {
                     printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n",
